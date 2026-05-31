@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shorts Generator</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#0a0a0f;font-family:'DM Sans',sans-serif;color:#e0e0f0;min-height:100vh}
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .header{background:linear-gradient(180deg,#12121a,#0a0a0f);border-bottom:1px solid rgba(255,255,255,0.06);padding:20px;text-align:center}
+    .title{font-size:32px;font-weight:800;background:linear-gradient(135deg,#fff,#ff4d6d);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px}
+    .container{max-width:600px;margin:0 auto;padding:20px 16px}
+    .label{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:10px;margin-top:20px}
+    .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .btn-niche{background:rgba(255,255,255,0.03);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 8px;color:rgba(255,255,255,0.45);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit;width:100%}
+    .btn-niche.active{background:rgba(255,77,109,0.2);border-color:#ff4d6d;color:#ff4d6d}
+    .btn-tone{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:20px;padding:7px 14px;color:rgba(255,255,255,0.45);font-size:12px;cursor:pointer;transition:all 0.2s;font-family:inherit}
+    .btn-tone.active{background:#ff4d6d;border-color:#ff4d6d;color:#000;font-weight:700}
+    .btn-generate{width:100%;margin-top:22px;background:linear-gradient(135deg,#ff4d6d,#ff4d6dbb);border:none;border-radius:14px;padding:15px;cursor:pointer;color:#000;font-size:16px;font-weight:700;letter-spacing:2px;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:10px;font-family:inherit}
+    .btn-generate:disabled{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);cursor:not-allowed}
+    .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite}
+    .steps{margin-top:18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;display:none}
+    .step{display:flex;align-items:center;gap:8px;margin-bottom:10px;opacity:0.35}
+    .step.active{opacity:1}
+    .step.done{opacity:1}
+    .step-dot{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:rgba(255,255,255,0.4);flex-shrink:0}
+    .step.active .step-dot{background:#ff4d6d;border-color:#ff4d6d;color:#000}
+    .step.done .step-dot{background:#00c896;border-color:#00c896;color:#000}
+    .step-label{font-size:12px;color:rgba(255,255,255,0.5)}
+    .step.active .step-label{color:#fff;font-weight:600}
+    .result{margin-top:24px;animation:fadeUp 0.5s ease;display:none}
+    .result-header{background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.25);border-radius:14px 14px 0 0;padding:12px 16px}
+    .result-title{font-size:13px;font-weight:700;color:#fff}
+    video{width:100%;background:#000;display:block;border-radius:0}
+    .btn-download{display:block;text-align:center;background:linear-gradient(135deg,#ff4d6d,#ff4d6dbb);color:#000;padding:13px;font-weight:700;font-size:14px;letter-spacing:2px;text-decoration:none;border-radius:0 0 14px 14px}
+    .error{margin-top:16px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.3);border-radius:12px;padding:14px;color:#ff4d6d;font-size:13px;display:none}
+    .hashtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+    .tag{background:rgba(255,77,109,0.18);border:1px solid rgba(255,77,109,0.4);border-radius:20px;padding:4px 10px;font-size:12px;color:#ff4d6d;font-weight:600}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="title">SHORTS GENERATOR</div>
+    <div class="subtitle">Style Hugodecrypte • IA + Images + Voix off</div>
+  </div>
+  <div class="container">
+    <div class="label">01 — Niche</div>
+    <div class="grid">
+      <button class="btn-niche active" onclick="selectNiche(this,'🌍 Actu Monde')">🌍 Actu Monde</button>
+      <button class="btn-niche" onclick="selectNiche(this,'🤖 Tech & IA')">🤖 Tech & IA</button>
+      <button class="btn-niche" onclick="selectNiche(this,'⚽ Sport')">⚽ Sport</button>
+      <button class="btn-niche" onclick="selectNiche(this,'💰 Finance')">💰 Finance</button>
+      <button class="btn-niche" onclick="selectNiche(this,'🎬 Culture')">🎬 Culture</button>
+      <button class="btn-niche" onclick="selectNiche(this,'🔬 Science')">🔬 Science</button>
+    </div>
+    <div class="label">02 — Ton</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-tone active" onclick="selectTone(this,'Choc & Viral')">🔥 Viral</button>
+      <button class="btn-tone" onclick="selectTone(this,'Éducatif')">🎓 Éducatif</button>
+      <button class="btn-tone" onclick="selectTone(this,'Humour')">😂 Humour</button>
+      <button class="btn-tone" onclick="selectTone(this,'Sérieux')">📢 Sérieux</button>
+    </div>
+    <button class="btn-generate" id="btnGenerate" onclick="generate()">⚡ GÉNÉRER LA VIDÉO</button>
+    <div class="steps" id="steps">
+      <div class="step active" id="step1"><div class="step-dot">1</div><div class="step-label">Génération du script IA</div></div>
+      <div class="step" id="step2"><div class="step-dot">2</div><div class="step-label">Voix off ElevenLabs</div></div>
+      <div class="step" id="step3"><div class="step-dot">3</div><div class="step-label">Téléchargement des images</div></div>
+      <div class="step" id="step4"><div class="step-dot">4</div><div class="step-label">Montage vidéo FFmpeg</div></div>
+    </div>
+    <div class="error" id="error"></div>
+    <div class="result" id="result">
+      <div class="result-header">
+        <div style="font-size:11px;color:#00c896;font-weight:700;margin-bottom:4px">🎬 VIDÉO GÉNÉRÉE !</div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="hashtags" id="resultHashtags"></div>
+      </div>
+      <video id="resultVideo" controls></video>
+      <a class="btn-download" id="resultDownload" download="short.mp4">⬇ TÉLÉCHARGER MP4</a>
+    </div>
+  </div>
+  <script>
+    let selectedNiche = "🌍 Actu Monde";
+    let selectedTone = "Choc & Viral";
+    let pollInterval = null;
+
+    function selectNiche(el, val) {
+      document.querySelectorAll(".btn-niche").forEach(b => b.classList.remove("active"));
+      el.classList.add("active");
+      selectedNiche = val;
+    }
+    function selectTone(el, val) {
+      document.querySelectorAll(".btn-tone").forEach(b => b.classList.remove("active"));
+      el.classList.add("active");
+      selectedTone = val;
+    }
+    function setStep(n) {
+      for(let i=1;i<=4;i++) {
+        const s = document.getElementById("step"+i);
+        s.classList.remove("active","done");
+        if(i < n) s.classList.add("done"), s.querySelector(".step-dot").textContent="✓";
+        if(i === n) s.classList.add("active");
+      }
+    }
+    async function generate() {
+      const btn = document.getElementById("btnGenerate");
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div>GÉNÉRATION...';
+      document.getElementById("steps").style.display = "block";
+      document.getElementById("error").style.display = "none";
+      document.getElementById("result").style.display = "none";
+      setStep(1);
+      const today = new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+      try {
+        const res = await fetch("/api/generate", {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ niche: selectedNiche, tone: selectedTone, today })
+        });
+        const data = await res.json();
+        if (!data.job_id) throw new Error("Pas de job_id");
+        pollInterval = setInterval(() => pollStatus(data.job_id), 3000);
+      } catch(e) {
+        showError(e.message);
+        resetBtn();
+      }
+    }
+    async function pollStatus(jobId) {
+      try {
+        const res = await fetch("/api/status/" + jobId);
+        const data = await res.json();
+        if (data.step) {
+          if (data.step.includes("script")) setStep(1);
+          else if (data.step.includes("voix")) setStep(2);
+          else if (data.step.includes("images")) setStep(3);
+          else if (data.step.includes("Montage")) setStep(4);
+        }
+        if (data.status === "completed") {
+          clearInterval(pollInterval);
+          setStep(5);
+          showResult(data);
+          resetBtn();
+        } else if (data.status === "failed") {
+          clearInterval(pollInterval);
+          showError(data.error || "Erreur inconnue");
+          resetBtn();
+        }
+      } catch(e) { clearInterval(pollInterval); showError(e.message); resetBtn(); }
+    }
+    function showResult(data) {
+      document.getElementById("result").style.display = "block";
+      document.getElementById("resultTitle").textContent = data.script?.sujet || "";
+      const video = document.getElementById("resultVideo");
+      video.src = data.video_url;
+      document.getElementById("resultDownload").href = data.video_url;
+      const tags = document.getElementById("resultHashtags");
+      tags.innerHTML = (data.script?.hashtags||[]).map(h=>`<span class="tag">${h}</span>`).join("");
+    }
+    function showError(msg) {
+      const el = document.getElementById("error");
+      el.textContent = "⚠️ " + msg;
+      el.style.display = "block";
+    }
+    function resetBtn() {
+      const btn = document.getElementById("btnGenerate");
+      btn.disabled = false;
+      btn.innerHTML = "⚡ GÉNÉRER LA VIDÉO";
+    }
+  </script>
+</body>
+</html>

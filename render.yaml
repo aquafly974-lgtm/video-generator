@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: video-generator
+    env: node
+    buildCommand: npm install && apt-get install -y ffmpeg
+    startCommand: node server.js
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: PEXELS_API_KEY
+        sync: false
