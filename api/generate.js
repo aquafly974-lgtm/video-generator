@@ -40,7 +40,7 @@ Réponds UNIQUEMENT en JSON:
   const data = await res.json();
   const raw = data.content?.filter(b => b.type==="text").map(b => b.text).join("") || "";
   const match = raw.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error("Pas de JSON Claude");
+  if (!match) throw new Error("Pas de JSON Claude. Reponse: " + raw.slice(0,200) + " Status: " + res.status);
   return JSON.parse(match[0]);
 }
 
