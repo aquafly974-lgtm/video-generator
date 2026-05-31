@@ -11,6 +11,7 @@ const ELEVENLABS_KEY = process.env.ELEVENLABS_API_KEY;
 const PEXELS_KEY = process.env.PEXELS_API_KEY;
 
 async function generateScript(niche, tone, today) {
+  if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY manquante sur Render");
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "Content-Type":"application/json","x-api-key":ANTHROPIC_KEY,"anthropic-version":"2023-06-01" },
