@@ -1,12 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use("/api/generate", require("./api/generate"));
-app.use("/api/status", require("./api/status"));
+const generateRouter = require("./api/generate");
+const statusRouter = require("./api/status");
+
+app.use("/api/generate", generateRouter);
+app.use("/api/status", statusRouter);
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
