@@ -7,7 +7,7 @@ const https = require("https");
 const { execSync, exec } = require("child_process");
 
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
-const ELEVENLABS_KEY = process.env.ELEVENLABS_API_KEY;
+let ELEVENLABS_KEY = process.env.ELEVENLABS_API_KEY;
 const PEXELS_KEY = process.env.PEXELS_API_KEY;
 
 async function generateScript(niche, tone, today) {
@@ -81,6 +81,7 @@ router.post("/", async (req, res) => {
 
   // Store job status
   global.jobs = global.jobs || {};
+  if (req.body.elevenlabs_key) ELEVENLABS_KEY = req.body.elevenlabs_key;
   global.jobs[jobId] = { status: "processing", step: "Génération du script..." };
 
   res.json({ job_id: jobId });
